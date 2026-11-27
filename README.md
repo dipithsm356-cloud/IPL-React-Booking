@@ -1,16 +1,19 @@
-# React + Vite
+# IPL Ticket Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The app loads matches from Supabase, books tickets in PostgreSQL, and refreshes the match list when database changes arrive through Realtime.
 
-Currently, two official plugins are available:
+## Supabase setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Create a Supabase project.
+2. In the Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql). This creates the `matches` and `bookings` tables, adds sample matches, enables row-level security, creates the atomic booking function, and adds `matches` to the Realtime publication.
+3. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from the project's Connect/API Keys dashboard. The publishable key is intended for browser use; never put a `service_role` or secret key in this app.
+4. Install dependencies and start the app:
 
-## React Compiler
+   ```sh
+   npm install
+   npm run dev
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+5. Book a match in the app, then check the `bookings` and `matches` tables in Supabase Table Editor. Each booking creates a row and decrements that match's `available_seats`.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Restart the Vite server after changing `.env.local`. The app uses `book_ticket` as a PostgreSQL transaction so simultaneous bookings cannot oversell seats or leave a booking and seat count out of sync. Matches are publicly readable; booking writes are performed only by that restricted database function.

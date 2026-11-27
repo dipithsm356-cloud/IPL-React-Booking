@@ -127,3 +127,40 @@ body {
   background-color: #f5b700;
   color: #071b3a;
 }
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .nav-links {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .matches {
+    padding: 30px 15px;
+  }
+
+  .match-card {
+    width: 100%;
+    max-width: 350px;
+    margin: 12px auto;
+    display: block;
+  }
+}
+

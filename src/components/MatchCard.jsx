@@ -1,22 +1,31 @@
 
-import { useState } from "react";
-
-function MatchCard(props) {
-  const [booked, setBooked] = useState(false);
+function MatchCard({ match, onBook, isBooking }) {
+  const date = new Date(`${match.match_date}T00:00:00`);
+  const formattedDate = date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="match-card">
-      <h2>{props.team1} vs {props.team2}</h2>
+      <h2>{match.team1} vs {match.team2}</h2>
 
-      <p>Date: {props.date}</p>
+      <p>Date: {formattedDate}</p>
 
-      <p>Venue: {props.venue}</p>
+      <p>Venue: {match.venue}</p>
+      <p>Available seats: {match.available_seats}</p>
 
-      <button onClick={() => setBooked(!booked)}>
-        {booked ? "Ticket Selected ✓" : "Book Tickets"}
+      <button
+        onClick={() => onBook(match)}
+        disabled={isBooking || match.available_seats <= 0}
+      >
+        {isBooking
+          ? "Booking..."
+          : match.available_seats <= 0
+            ? "Sold Out"
+            : "Book Tickets"}
       </button>
-
-      {booked && <p> You selected this match!</p>}
     </div>
   );
 }
